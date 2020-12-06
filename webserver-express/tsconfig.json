@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "lib"
+  ],
+  "references": [
+    {
+      "path": "../core"
+    }
+  ]
+}

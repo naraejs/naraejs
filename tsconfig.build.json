@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2019"],
+    "module": "commonjs",
+    "removeComments": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "target": "ES2019",
+    "strict": true,
+    "experimentalDecorators": true,
+    "outDir": "./lib"
+  },
+  "exclude": [
+    "node_modules/**/*",
+    "lib"
+  ]
+}

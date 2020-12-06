@@ -1,0 +1,44 @@
+{
+  "name": "@naraejs/webserver-serverless",
+  "version": "0.0.1-develop",
+  "description": "",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "check": "tsc -p tsconfig.build.json --noEmit",
+    "build": "tsc -b tsconfig.build.json",
+    "build-dev": "tsc -b",
+    "build-dep": "lerna run build --stream --scope=@naraejs/webserver-serverless --include-dependencies"
+  },
+  "_moduleDirectories": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naraejs/naraejs.git"
+  },
+  "keywords": [
+    "naraejs",
+    "webserver"
+  ],
+  "author": {
+    "name": "Joseph Lee",
+    "email": "development@jc-lab.net"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/naraejs/naraejs/issues"
+  },
+  "homepage": "https://github.com/naraejs/naraejs#readme",
+  "dependencies": {
+    "aws-serverless-express": "^3.3.8",
+    "wait-signal": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/aws-serverless-express": "^3.3.3",
+    "@types/node": "^14.11.5"
+  },
+  "peerDependencies": {
+    "typescript": "^4.0.5"
+  }
+}
