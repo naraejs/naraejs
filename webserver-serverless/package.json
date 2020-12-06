@@ -30,6 +30,9 @@
     "url": "https://github.com/naraejs/naraejs/issues"
   },
   "homepage": "https://github.com/naraejs/naraejs#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "aws-serverless-express": "^3.3.8",
     "wait-signal": "^1.0.4"

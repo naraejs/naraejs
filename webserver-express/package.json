@@ -31,6 +31,9 @@
     "url": "https://github.com/naraejs/naraejs/issues"
   },
   "homepage": "https://github.com/naraejs/naraejs#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "bean.ts": "^1.0.7",
     "express": "^4.17.1"
