@@ -3,7 +3,7 @@ import {
   RestController,
   RequestMapping,
   RequestBody
-} from '../core/src';
+} from '@naraejs/core';
 
 @RestController({
   path: '/api'

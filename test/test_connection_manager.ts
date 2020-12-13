@@ -2,7 +2,7 @@ import {
   installer,
   ConnectionManager,
   IConnectionManagerHandler,
-} from '../core/src';
+} from '@naraejs/core';
 
 @ConnectionManager()
 class GoodConnectionManager implements IConnectionManagerHandler {

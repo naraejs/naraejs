@@ -1,7 +1,7 @@
 import chai from 'chai';
 import request from 'supertest';
 
-import * as naraejs from '../../core/src';
+import * as naraejs from '@naraejs/core';
 
 import * as webserverExpress from '../src';
 naraejs.install(webserverExpress);
