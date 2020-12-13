@@ -1,6 +1,6 @@
 {
   "name": "@naraejs/webserver-express",
-  "version": "0.0.2-develop",
+  "version": "0.0.2",
   "description": "",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -39,7 +39,7 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
-    "@naraejs/core": "0.0.2-develop",
+    "@naraejs/core": "^0.0.2",
     "@types/chai": "^4.2.14",
     "@types/express": "^4.17.8",
     "@types/mocha": "^8.0.3",
