@@ -1,4 +1,7 @@
 build
 node_modules
 lib
+dist
 .idea
+
+lerna-debug.log

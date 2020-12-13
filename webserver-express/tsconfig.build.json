@@ -1,12 +1,17 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../tsconfig.build.json",
   "compilerOptions": {
-    "outDir": "./lib"
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "paths": {
+      "@naraejs/*": ["../*/lib"]
+    }
   },
   "include": [
     "src"
   ],
   "exclude": [
-    "lib"
+    "lib",
+    "node_modules"
   ]
 }

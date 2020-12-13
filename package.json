@@ -1,12 +1,12 @@
 {
   "name": "@naraejs/parent",
   "private": true,
-  "version": "0.0.1-develop",
+  "version": "0.0.2-develop",
   "description": "",
   "main": "index.js",
   "scripts": {
     "check": "lerna run check && eslint . --ext .js,.ts",
-    "build": "lerna run build",
+    "build": "lerna run build --include-dependencies",
     "test": "lerna run test",
     "postinstall": "lerna bootstrap",
     "prepack": "npm run test && npm run build",

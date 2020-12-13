@@ -1,12 +1,12 @@
 {
   "name": "@naraejs/webserver-express",
-  "version": "0.0.1-develop",
+  "version": "0.0.2-develop",
   "description": "",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
     "check": "tsc -p tsconfig.build.json --noEmit",
-    "build": "tsc -b tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json --outDir ./lib",
     "test": "mocha -r ts-node/register -r tsconfig-paths/register --recursive test/**/*.ts",
     "build-dev": "tsc -b",
     "build-dep": "lerna run build --stream --scope=@naraejs/webserver-express --include-dependencies"
@@ -39,6 +39,7 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "@naraejs/core": "0.0.2-develop",
     "@types/chai": "^4.2.14",
     "@types/express": "^4.17.8",
     "@types/mocha": "^8.0.3",

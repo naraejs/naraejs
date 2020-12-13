@@ -11,7 +11,11 @@
     "target": "ES2019",
     "strict": true,
     "experimentalDecorators": true,
-    "outDir": "./lib"
+    "outDir": "./lib",
+    "baseUrl": ".",
+    "paths": {
+      "@naraejs/*": ["./*/lib"]
+    }
   },
   "exclude": [
     "node_modules/**/*",
