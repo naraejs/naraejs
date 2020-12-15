@@ -1,5 +1,9 @@
+import * as path from 'path';
+import * as fs from 'fs';
+
 import chai from 'chai';
 import request from 'supertest';
+import express from 'express';
 
 import * as naraejs from '@naraejs/core';
 
@@ -11,6 +15,21 @@ naraejs.install(apiControllerInstall);
 
 import * as testConnectionManager from '../../../test/test_connection_manager';
 naraejs.install(testConnectionManager);
+
+const PUBLIC_PATH = path.resolve(__dirname, './public');
+
+@naraejs.Configuration({
+  order: -1
+})
+class PublicWebConfiguration implements webserverExpress.IWebserverExpressConfigurer {
+  constructor() {
+    webserverExpress.makeToConfiguration(this);
+  }
+
+  expressCustomize(expressBuilder: webserverExpress.ConfigurableExpress): void | Promise<void> {
+    expressBuilder.getRouter().use(express.static(PUBLIC_PATH));
+  }
+}
 
 @naraejs.Configuration()
 class WebserverConfiguration implements webserverExpress.IWebserverExpressConfigurer {
@@ -62,6 +81,12 @@ describe('Sample Project Test', function() {
       .send({a: 10, b: 20})
       .expect('Content-Type', /^application\/json/)
       .expect(200, {value: 30})
+      .end(done);
+  });
+  it('expressCustomize: get /test.txt should read from the file', function (done) {
+    request(server)
+      .get('/test.txt')
+      .expect(200, fs.readFileSync(path.join(PUBLIC_PATH, 'test.txt'), {encoding: 'utf8'}))
       .end(done);
   });
 });

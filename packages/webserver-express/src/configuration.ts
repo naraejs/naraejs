@@ -132,6 +132,11 @@ export class WebserverExpressConfigurationBuilder {
     return this;
   }
 
+  /**
+   * To change contextPath, order must be less than 0
+   *
+   * @param contextPath url prefix
+   */
   public contextPath(contextPath: string): this {
     this._values.contextPath = contextPath;
     return this;
@@ -147,7 +152,13 @@ export class WebserverExpressConfigurationBuilder {
   }
 }
 
+export interface ConfigurableExpress {
+  getExpress(): express.Express;
+  getRouter(): express.Router;
+}
+
 export interface IWebserverExpressConfigurer {
+  expressCustomize?(expressBuilder: ConfigurableExpress): void | Promise<void>;
   configure?(builder: WebserverExpressConfigurationBuilder): void | Promise<void>;
   configureMessageConverters?(messageConverters: IHttpMessageConverter[]): void | Promise<void>;
 }

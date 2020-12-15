@@ -47,7 +47,8 @@ import {
   intl as confIntl,
   IWebserverExpressConfigurer,
   WebserverExpressConfigurationBuilder,
-  makeToConfiguration as makeToWebserverConfiguration
+  makeToConfiguration as makeToWebserverConfiguration,
+  ConfigurableExpress
 } from './configuration';
 
 import {
@@ -57,16 +58,9 @@ import {
 export * from './bean-type';
 export * from './configuration';
 
-@Configuration()
-class DefaultWebServerConfiguration implements IWebserverExpressConfigurer {
-  constructor() {
-    makeToWebserverConfiguration(this);
-  }
-
-  configureMessageConverters(messageConverters: IHttpMessageConverter[]): void | Promise<void> {
-    messageConverters.push(new JsonHttpMessageConverter());
-  }
-}
+const symWrappedRequestRun = Symbol();
+const symExpressMessageConverterHandler = Symbol();
+const symCurrentSettings = Symbol();
 
 @Module()
 export class WebserverExpress {
@@ -80,6 +74,12 @@ export class WebserverExpress {
 
   private _httpMessageConverters: IHttpMessageConverter[];
 
+  private _currentSettings: confIntl.IConfigurationValues = {} as any;
+
+  public get [symCurrentSettings]() {
+    return this._currentSettings;
+  }
+
   constructor() {
     this._requestErrorHandlers = [];
 
@@ -89,12 +89,21 @@ export class WebserverExpress {
 
     this._httpMessageConverters = [];
 
+    const configurableExpress: ConfigurableExpress = {
+      getExpress: (): express.Express => {
+        return this._expressApp;
+      },
+      getRouter: (): express.Router => {
+        return this._expressRouter;
+      }
+    };
+
     makeToModule(S_WebserverExpressModule, this)
       .order(0)
       .start((core: INaraeCore) => {
         this._core = core;
 
-        const lastSettings: confIntl.IConfigurationValues = {} as any;
+        const lastSettings = this._currentSettings;
         const configurations = framework.findConfigurationsByIdentity(S_WebserverConfiguration);
 
         return configurations
@@ -138,6 +147,11 @@ export class WebserverExpress {
                     if (configurerImpl.configureMessageConverters) {
                       return configurerImpl.configureMessageConverters(this._httpMessageConverters);
                     }
+                  })
+                  .then(() => {
+                    if (configurerImpl.expressCustomize) {
+                      return configurerImpl.expressCustomize(configurableExpress);
+                    }
                   });
               })
           , Promise.resolve())
@@ -153,9 +167,6 @@ export class WebserverExpress {
             if (!lastSettings.httpPort) {
               lastSettings.httpPort = 8080;
             }
-            if (!lastSettings.contextPath) {
-              lastSettings.contextPath = '/';
-            }
             if (!lastSettings.customServer) {
               lastSettings.customServer = (app) => http.createServer(app);
             }
@@ -164,51 +175,6 @@ export class WebserverExpress {
               this._initHealthEndpoint(this._expressHealthRouter);
               this._expressRouter.use(lastSettings.healthEndpointContextPath, this._expressHealthRouter);
             }
-
-            const restControllers = beanFactory.getBeansByComponentType(RestController);
-            const restRouter = express.Router();
-            restControllers
-              .forEach(controller => {
-                const controllerAttrs: beants.IAttributeAnnotation = controller.getAnnotation(RestController) as beants.IAttributeAnnotation;
-                const requestMappings = controller.getMethodsByAnnotation(RequestMapping);
-                const controllerOptions: IControllerOptions = controllerAttrs.options || { path: '/' };
-                requestMappings.forEach((requestMapping) => {
-                  const requestMappingAttrs = requestMapping.getAnnotation(RequestMapping) as beants.IAttributeAnnotation;
-                  const requestMappingOptions: IRequestMappingOptions = requestMappingAttrs.options;
-                  const joinedPath = controllerOptions.path ?
-                    joinUrl(controllerOptions.path, requestMappingOptions.path) :
-                    requestMappingOptions.path;
-                  const httpMethod = requestMappingOptions.method ? requestMappingOptions.method.toLowerCase() : 'use';
-
-                  const parameterGenerator = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-                    const parameterDefinitions = requestMapping.getParameters();
-                    return parameterDefinitions
-                      .map(info => {
-                        if (info) {
-                          if (info.attributeType === CONST_HttpRequestParam) {
-                            return req;
-                          } else if (info.attributeType === CONST_HttpResponseParam) {
-                            return res;
-                          } else if (info.attributeType === CONST_HttpNextParam) {
-                            return next;
-                          } else if (info.attributeType === CONST_RequestBody) {
-                            return req.body;
-                          }
-                        }
-                        return undefined;
-                      });
-                  };
-
-                  (restRouter as any)[httpMethod](joinedPath, (req: express.Request, res: express.Response, next: express.NextFunction) => {
-                    const parameters = parameterGenerator(req, res, next);
-                    this._wrappedRequestRun(req, res, next, requestMapping.bind(controller.getObject(), ...parameters));
-                  });
-                });
-              });
-
-            this._expressRouter.use(restRouter);
-            this._expressApp.use((req, res, next) => this._expressMessageConverterHandler(false, req, res, next));
-            this._expressApp.use(lastSettings.contextPath, this._expressRouter);
 
             return Promise.resolve((lastSettings.customServer)(this._expressApp))
               .then((server) => {
@@ -240,7 +206,7 @@ export class WebserverExpress {
 
   private _initHealthEndpoint(router: express.Router) {
     router.get('/health', (req, res, next) => {
-      this._wrappedRequestRun(req, res, next, () => {
+      this[symWrappedRequestRun](req, res, next, () => {
         this._core.healthCheck()
           .then((results) => {
             res
@@ -285,7 +251,7 @@ export class WebserverExpress {
       });
   }
 
-  private _wrappedRequestRun(req: express.Request, res: express.Response, next: express.NextFunction, runner: () => any, opts?: {
+  public [symWrappedRequestRun](req: express.Request, res: express.Response, next: express.NextFunction, runner: () => any, opts?: {
     ignoreResolvedPromise: boolean
   }) {
     const _ignoreResolvedPromise = opts && opts.ignoreResolvedPromise;
@@ -316,7 +282,7 @@ export class WebserverExpress {
     }
   }
 
-  private _expressMessageConverterHandler(outbound: boolean, req: express.Request, res: express.Response, next: any, data?: any) {
+  private [symExpressMessageConverterHandler](outbound: boolean, req: express.Request, res: express.Response, next: any, data?: any) {
     this._httpMessageConverters.reduce(
       (prev, cur) => prev.then((prevResult) => {
         if (prevResult.processed)
@@ -344,6 +310,73 @@ export class WebserverExpress {
       });
   }
 
+}
+
+@Configuration()
+class DefaultWebServerConfiguration implements IWebserverExpressConfigurer {
+  constructor() {
+    makeToWebserverConfiguration(this);
+  }
+
+  configureMessageConverters(messageConverters: IHttpMessageConverter[]): void | Promise<void> {
+    messageConverters.push(new JsonHttpMessageConverter());
+  }
+
+  expressCustomize(expressBuilder: ConfigurableExpress): void | Promise<void> {
+    const moduleBean = beanFactory.getBeanByClass(WebserverExpress);
+    const module = moduleBean && moduleBean.getObject();
+    if (!module) {
+      return Promise.reject(new Error('Something Error (module is null)'));
+    }
+    const restControllers = beanFactory.getBeansByComponentType(RestController);
+    const restRouter = express.Router();
+    restControllers
+      .forEach(controller => {
+        const controllerAttrs: beants.IAttributeAnnotation = controller.getAnnotation(RestController) as beants.IAttributeAnnotation;
+        const requestMappings = controller.getMethodsByAnnotation(RequestMapping);
+        const controllerOptions: IControllerOptions = controllerAttrs.options || { path: '/' };
+        requestMappings.forEach((requestMapping) => {
+          const requestMappingAttrs = requestMapping.getAnnotation(RequestMapping) as beants.IAttributeAnnotation;
+          const requestMappingOptions: IRequestMappingOptions = requestMappingAttrs.options;
+          const joinedPath = controllerOptions.path ?
+            joinUrl(controllerOptions.path, requestMappingOptions.path) :
+            requestMappingOptions.path;
+          const httpMethod = requestMappingOptions.method ? requestMappingOptions.method.toLowerCase() : 'use';
+
+          const parameterGenerator = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            const parameterDefinitions = requestMapping.getParameters();
+            return parameterDefinitions
+              .map(info => {
+                if (info) {
+                  if (info.attributeType === CONST_HttpRequestParam) {
+                    return req;
+                  } else if (info.attributeType === CONST_HttpResponseParam) {
+                    return res;
+                  } else if (info.attributeType === CONST_HttpNextParam) {
+                    return next;
+                  } else if (info.attributeType === CONST_RequestBody) {
+                    return req.body;
+                  }
+                }
+                return undefined;
+              });
+          };
+
+          (restRouter as any)[httpMethod](joinedPath, (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            const parameters = parameterGenerator(req, res, next);
+            module[symWrappedRequestRun](req, res, next, requestMapping.bind(controller.getObject(), ...parameters));
+          });
+        });
+      });
+
+    const lastSettings = module[symCurrentSettings];
+    if (!lastSettings.contextPath) {
+      lastSettings.contextPath = '/';
+    }
+    expressBuilder.getRouter().use(restRouter);
+    expressBuilder.getExpress().use((req, res, next) => module[symExpressMessageConverterHandler](false, req, res, next));
+    expressBuilder.getExpress().use(lastSettings.contextPath, expressBuilder.getRouter());
+  }
 }
 
 export default installer;
