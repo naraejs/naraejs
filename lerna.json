@@ -1,9 +1,8 @@
 {
   "version": "0.0.1",
   "packages": [
-    "core",
-    "webserver-express",
-    "webserver-serverless",
-    "sample-projects/kubeless"
+    "packages/core",
+    "packages/webserver-express",
+    "packages/webserver-serverless"
   ]
 }

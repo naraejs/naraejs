@@ -1,9 +1,12 @@
 import {
   installer,
-  RestController,
   RequestMapping,
   RequestBody
 } from '@naraejs/core';
+
+import {
+  RestController
+} from '@naraejs/webserver-express';
 
 @RestController({
   path: '/api'

@@ -14,7 +14,7 @@
     "outDir": "./lib",
     "baseUrl": ".",
     "paths": {
-      "@naraejs/*": ["./*/lib"]
+      "@naraejs/*": ["./packages/*/lib"]
     }
   },
   "exclude": [

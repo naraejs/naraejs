@@ -20,14 +20,17 @@ import {
   CONST_HttpRequestParam,
   CONST_HttpResponseParam,
   CONST_RequestBody,
-  IControllerOptions,
   INaraeCore,
   IRequestMappingOptions,
   RequestMapping,
-  RestController,
   makeToModule,
   framework
 } from '@naraejs/core';
+
+import {
+  IControllerOptions,
+  RestController
+} from './bean-type';
 
 import {
   IHttpMessageConverter,
@@ -51,6 +54,7 @@ import {
   JsonHttpMessageConverter
 } from './message_converter/json_http_message_converter';
 
+export * from './bean-type';
 export * from './configuration';
 
 @Configuration()

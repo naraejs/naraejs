@@ -1,14 +1,15 @@
 {
-  "name": "@naraejs/webserver-serverless",
-  "version": "0.0.2-develop",
+  "name": "@naraejs/webserver-express",
+  "version": "0.0.3-develop",
   "description": "",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
     "check": "tsc -p tsconfig.build.json --noEmit",
     "build": "tsc -p tsconfig.build.json --outDir ./lib",
+    "test": "mocha -r ts-node/register -r tsconfig-paths/register --recursive test/**/*.ts",
     "build-dev": "tsc -b",
-    "build-dep": "lerna run build --stream --scope=@naraejs/webserver-serverless --include-dependencies"
+    "build-dep": "lerna run build --stream --scope=@naraejs/webserver-express --include-dependencies"
   },
   "_moduleDirectories": [
     "lib"
@@ -34,14 +35,24 @@
     "access": "public"
   },
   "dependencies": {
-    "aws-serverless-express": "^3.3.8",
-    "wait-signal": "^1.0.4"
+    "bean.ts": "^1.0.7",
+    "express": "^4.17.1"
   },
   "devDependencies": {
-    "@naraejs/core": "0.0.2-develop",
-    "@naraejs/webserver-express": "0.0.2-develop",
-    "@types/aws-serverless-express": "^3.3.3",
-    "@types/node": "^14.11.5"
+    "@naraejs/core": "0.0.3-develop",
+    "@types/chai": "^4.2.14",
+    "@types/express": "^4.17.8",
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^14.14.6",
+    "@types/supertest": "^2.0.10",
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
+    "@typescript-eslint/parser": "^4.6.1",
+    "chai": "^4.2.0",
+    "eslint": "^7.13.0",
+    "supertest": "^6.0.1",
+    "ts-node": "^9.0.0",
+    "tsc": "^1.20150623.0",
+    "typescript": "^4.0.5"
   },
   "peerDependencies": {
     "typescript": "^4.0.5"

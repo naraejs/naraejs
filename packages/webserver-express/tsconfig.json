@@ -1,10 +1,10 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "./src",
     "paths": {
-      "@naraejs/*": ["../*/lib"]
+      "@naraejs/*": ["../*/src"]
     }
   },
   "include": [
@@ -16,9 +16,6 @@
   "references": [
     {
       "path": "../core"
-    },
-    {
-      "path": "../webserver-express"
     }
   ]
 }

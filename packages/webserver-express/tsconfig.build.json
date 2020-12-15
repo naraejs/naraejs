@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../../tsconfig.build.json",
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "./src",
@@ -11,6 +11,7 @@
     "src"
   ],
   "exclude": [
-    "lib"
+    "lib",
+    "node_modules"
   ]
 }

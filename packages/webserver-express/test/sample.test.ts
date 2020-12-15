@@ -6,10 +6,10 @@ import * as naraejs from '@naraejs/core';
 import * as webserverExpress from '../src';
 naraejs.install(webserverExpress);
 
-import * as apiControllerInstall from '../../test/api_controller';
+import * as apiControllerInstall from '../../../test/api_controller';
 naraejs.install(apiControllerInstall);
 
-import * as testConnectionManager from '../../test/test_connection_manager';
+import * as testConnectionManager from '../../../test/test_connection_manager';
 naraejs.install(testConnectionManager);
 
 @naraejs.Configuration()
