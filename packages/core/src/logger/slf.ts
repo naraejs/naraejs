@@ -50,7 +50,7 @@ export function Slf(options?: ISlfOptions) {
     const namespace = options && options.namespace && `${options.namespace}.${constructor.name}` || constructor.name;
     const newConstructor = function (...args: any[]) {
       const instance: any = new constructor(...args);
-      instance.log = slfLogger;
+      instance.log = slfLogger.child(namespace);
       return instance;
     };
     Object.defineProperty(newConstructor, 'name', {
