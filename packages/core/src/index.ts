@@ -12,4 +12,5 @@ export * from './app-beans';
 export * from './types';
 export * from './configuration';
 export * from './module';
+export * from './logger';
 export * from './core';

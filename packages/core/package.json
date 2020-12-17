@@ -43,7 +43,7 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "bean.ts": "^1.0.7",
+    "bean.ts": "^1.0.10",
     "wait-signal": "^1.0.4"
   },
   "peerDependencies": {
