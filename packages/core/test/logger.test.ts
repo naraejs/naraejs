@@ -8,7 +8,7 @@ import {
   LogWriter,
   LogWithLevel,
   ConsoleLogWriter,
-  setSlfWriter
+  LogBridge
 } from '../src/logger';
 
 import {
@@ -83,7 +83,10 @@ describe('Logger Tests', function () {
   });
   it('Custom Log Writer', () => {
     const customWriter = new CustomLogWriter();
-    setSlfWriter(customWriter);
+    const binding = LogBridge.getInstance().getBindings();
+
+    binding.splice(0, binding.length);
+    binding.push({namespace: 'root', writers: [customWriter]});
 
     const a = new LogableModel();
     a.test();
@@ -103,6 +106,7 @@ describe('Logger Tests', function () {
       }
     ]);
 
-    setSlfWriter(consoleLogWriter);
+    binding.splice(0, binding.length);
+    binding.push({namespace: 'root', writers: [consoleLogWriter]});
   });
 });

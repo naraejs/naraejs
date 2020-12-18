@@ -21,13 +21,7 @@ import {
   LoggerLike, LogWriter
 } from './abstract';
 
-import { RootLogger } from './root-logger';
-import { ConsoleLogWriter } from './console-log-writer';
-
-const slfLogger = new RootLogger(new ConsoleLogWriter());
-export function setSlfWriter(logWriter: LogWriter) {
-  slfLogger.writer = logWriter;
-}
+import { LoggerFactory } from './factory';
 
 export const CONST_Slf = 'Slf';
 export interface ISlfOptions extends IBeanOptions {
@@ -50,7 +44,7 @@ export function Slf(options?: ISlfOptions) {
     const namespace = options && options.namespace && `${options.namespace}.${constructor.name}` || constructor.name;
     const newConstructor = function (...args: any[]) {
       const instance: any = new constructor(...args);
-      instance.log = slfLogger.child(namespace);
+      instance.log = LoggerFactory.getLogger(namespace);
       return instance;
     };
     Object.defineProperty(newConstructor, 'name', {
