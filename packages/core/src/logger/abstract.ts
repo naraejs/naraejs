@@ -14,6 +14,7 @@ export interface Log {
   namespace?: string;
   message: string;
   metadata?: any;
+  error?: Error | undefined;
 }
 
 export interface LogWithLevel extends Log {
@@ -24,21 +25,29 @@ export interface LogWriter {
   writeLog(log: LogWithLevel): void;
 }
 
+//TODO: ERROR
 export interface LoggerLike {
   trace(log: Log): void;
   trace(message: string, metadata?: any): void;
+  trace(message: string, error: any, metadata?: any): void;
   debug(log: Log): void;
   debug(message: string, metadata?: any): void;
+  debug(message: string, error: any, metadata?: any): void;
   info(log: Log): void;
   info(message: string, metadata?: any): void;
+  info(message: string, error: any, metadata?: any): void;
   warn(log: Log): void;
   warn(message: string, metadata?: any): void;
+  warn(message: string, error: any, metadata?: any): void;
   error(log: Log): void;
   error(message: string, metadata?: any): void;
+  error(message: string, error: any, metadata?: any): void;
   fatal(log: Log): void;
   fatal(message: string, metadata?: any): void;
+  fatal(message: string, error: any, metadata?: any): void;
   log(log: LogWithLevel): void;
   log(level: LogLevel, message: string, metadata?: any): void;
+  log(level: LogLevel, message: string, error: any, metadata?: any): void;
   child(namespace: string): LoggerLike;
 }
 
@@ -47,99 +56,105 @@ export abstract class AbstractLogger implements LoggerLike, LogWriter {
 
   trace(log: Log): void;
   trace(message: string, metadata?: any): void;
-  trace(logOrMsg: Log | string, metadata?: any): void {
-    const log: LogWithLevel = (typeof logOrMsg === 'string') ? {
-      level: LogLevel.TRACE,
-      message: logOrMsg,
-      metadata: metadata
-    } : {
-      ...logOrMsg,
-      level: LogLevel.TRACE
-    };
-    this.log(log);
+  trace(message: string, error: Error, metadata?: any): void;
+  trace(logOrMsg: Log | string, errorOrMetadata?: Error | any, metadata?: any): void {
+    if (typeof logOrMsg === 'string') {
+      this.log(LogLevel.TRACE, logOrMsg, errorOrMetadata, metadata);
+    } else {
+      this.log({
+        ...logOrMsg,
+        level: LogLevel.TRACE
+      });
+    }
   }
 
   debug(log: Log): void;
   debug(message: string, metadata?: any): void;
-  debug(logOrMsg: Log | string, metadata?: any): void {
-    const log: LogWithLevel = (typeof logOrMsg === 'string') ? {
-      level: LogLevel.DEBUG,
-      message: logOrMsg,
-      metadata: metadata
-    } : {
-      ...logOrMsg,
-      level: LogLevel.DEBUG
-    };
-    this.log(log);
+  debug(message: string, error: Error, metadata?: any): void;
+  debug(logOrMsg: Log | string, errorOrMetadata?: Error | any, metadata?: any): void {
+    if (typeof logOrMsg === 'string') {
+      this.log(LogLevel.DEBUG, logOrMsg, errorOrMetadata, metadata);
+    } else {
+      this.log({
+        ...logOrMsg,
+        level: LogLevel.DEBUG
+      });
+    }
   }
 
   info(log: Log): void;
   info(message: string, metadata?: any): void;
-  info(logOrMsg: Log | string, metadata?: any): void {
-    const log: LogWithLevel = (typeof logOrMsg === 'string') ? {
-      level: LogLevel.INFO,
-      message: logOrMsg,
-      metadata: metadata
-    } : {
-      ...logOrMsg,
-      level: LogLevel.INFO
-    };
-    this.log(log);
+  info(message: string, error: Error, metadata?: any): void;
+  info(logOrMsg: Log | string, errorOrMetadata?: Error | any, metadata?: any): void {
+    if (typeof logOrMsg === 'string') {
+      this.log(LogLevel.INFO, logOrMsg, errorOrMetadata, metadata);
+    } else {
+      this.log({
+        ...logOrMsg,
+        level: LogLevel.INFO
+      });
+    }
   }
 
   warn(log: Log): void;
   warn(message: string, metadata?: any): void;
-  warn(logOrMsg: Log | string, metadata?: any): void {
-    const log: LogWithLevel = (typeof logOrMsg === 'string') ? {
-      level: LogLevel.WARN,
-      message: logOrMsg,
-      metadata: metadata
-    } : {
-      ...logOrMsg,
-      level: LogLevel.WARN
-    };
-    this.log(log);
+  warn(message: string, error: Error, metadata?: any): void;
+  warn(logOrMsg: Log | string, errorOrMetadata?: Error | any, metadata?: any): void {
+    if (typeof logOrMsg === 'string') {
+      this.log(LogLevel.WARN, logOrMsg, errorOrMetadata, metadata);
+    } else {
+      this.log({
+        ...logOrMsg,
+        level: LogLevel.WARN
+      });
+    }
   }
 
   error(log: Log): void;
   error(message: string, metadata?: any): void;
-  error(logOrMsg: Log | string, metadata?: any): void {
-    const log: LogWithLevel = (typeof logOrMsg === 'string') ? {
-      level: LogLevel.ERROR,
-      message: logOrMsg,
-      metadata: metadata
-    } : {
-      ...logOrMsg,
-      level: LogLevel.ERROR
-    };
-    this.log(log);
+  error(message: string, error: Error, metadata?: any): void;
+  error(logOrMsg: Log | string, errorOrMetadata?: Error | any, metadata?: any): void {
+    if (typeof logOrMsg === 'string') {
+      this.log(LogLevel.ERROR, logOrMsg, errorOrMetadata, metadata);
+    } else {
+      this.log({
+        ...logOrMsg,
+        level: LogLevel.ERROR
+      });
+    }
   }
 
   fatal(log: Log): void;
   fatal(message: string, metadata?: any): void;
-  fatal(logOrMsg: Log | string, metadata?: any): void {
-    const log: LogWithLevel = (typeof logOrMsg === 'string') ? {
-      level: LogLevel.FATAL,
-      message: logOrMsg,
-      metadata: metadata
-    } : {
-      ...logOrMsg,
-      level: LogLevel.FATAL
-    };
-    this.log(log);
+  fatal(message: string, error: Error, metadata?: any): void;
+  fatal(logOrMsg: Log | string, errorOrMetadata?: Error | any, metadata?: any): void {
+    if (typeof logOrMsg === 'string') {
+      this.log(LogLevel.FATAL, logOrMsg, errorOrMetadata, metadata);
+    } else {
+      this.log({
+        ...logOrMsg,
+        level: LogLevel.FATAL
+      });
+    }
   }
 
   log(log: LogWithLevel): void;
   log(level: LogLevel, message: string, metadata?: any): void;
-  log(logOrLevel: LogWithLevel | LogLevel, message?: string, metadata?: any): void {
+  log(level: LogLevel, message: string, error: Error, metadata?: any): void;
+  log(logOrLevel: LogWithLevel | LogLevel, message?: string, errorOrMetadata?: Error | any, metadata?: any): void {
+    const _error: Error | undefined = (errorOrMetadata && errorOrMetadata instanceof Error) ? errorOrMetadata : undefined;
+    const _metadata: any | undefined = _error ? metadata : errorOrMetadata;
     const timestamp = new Date();
     const log: LogWithLevel = Object.assign({
-      timestamp
+      timestamp,
+      error: _error,
+      metadata: _metadata
     }, (typeof logOrLevel === 'object') ? logOrLevel : {
       timestamp,
       level: logOrLevel,
       message: message as string,
-      metadata
+      error: _error,
+      metadata: _metadata
     });
     this.writeLog(log);
   }

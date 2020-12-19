@@ -12,7 +12,7 @@ export class ConsoleLogWriter implements LogWriter {
   writeLog(log: LogWithLevel): void {
     const timestamp = log.timestamp || new Date();
     const levelText = LEVEL_TEXTS[log.level];
-    const line = `[${levelText}] ${timestamp.toISOString()} [${log.namespace}] - ${log.message}`;
+    const line = `[${levelText}] ${timestamp.toISOString()} [${log.namespace}] - ${log.message}${log.error ? ('\n' + log.error.stack) : ''}`;
     switch (log.level) {
     case LogLevel.TRACE:
     case LogLevel.DEBUG:
