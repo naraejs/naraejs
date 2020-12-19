@@ -9,7 +9,8 @@
  */
 
 export * from './app-beans';
-export * from './types';
+export * from './type';
+export * from './connection-manager';
 export * from './configuration';
 export * from './module';
 export * from './logger';

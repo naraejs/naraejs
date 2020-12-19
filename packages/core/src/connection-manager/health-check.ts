@@ -26,15 +26,10 @@ export interface IHealthCheckResponse {
   details?: Record<string, IHealthCheckResponse>;
 }
 
-export interface IConnectionManagerHandler {
-  name: string;
-  essential: boolean;
-  healthCheck(): Promise<any>;
-}
-
-export type Partial<T> = { [P in keyof T]?: T[P]; };
-
-export interface INaraeCore {
-  healthCheck(): Promise<IHealthCheckResponse>;
-  readySignal(): Promise<void>;
+/**
+ * Usage:
+ *  class YourError extends Error implements IHealthCheckError { ... }
+ */
+export interface IHealthCheckError {
+  details?: any;
 }

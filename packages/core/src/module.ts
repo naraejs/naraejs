@@ -10,7 +10,7 @@
 
 import {
   INaraeCore
-} from './types';
+} from './type';
 
 const S_ModuleInfo = Symbol('ModuleInfo');
 

@@ -7,10 +7,12 @@ import {
   IInstancedClass
 } from 'bean.ts';
 import {
-  INaraeCore,
+  INaraeCore
+} from './type';
+import {
   IConnectionManagerHandler,
   IHealthCheckResponse
-} from './types';
+} from './connection-manager';
 import {
   IConfigurationInfo,
   _framework as frameworkConfiguration
