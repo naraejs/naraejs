@@ -27,6 +27,13 @@ In the existing express-based software, the user has to implement the router dir
 In narae.js, a user can easily implement a handler through the @RequestMapping annotation without having to create a router.
 Also, catches and handles errors that occur in handlers for possible error occurrence situations.
 
+## Aspect Oriented Programming
+= **AOP**
+
+It supports AOP such as:
+* easy to use logger through `@Slf` annotation.
+* automatically commit/rollback by designating transaction area through `@Transactional` annotation.
+
 # License
 
 [Apache License 2.0](LICENSE)

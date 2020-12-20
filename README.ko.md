@@ -25,6 +25,14 @@ bean.ts를 통해 의존성 주입을 지원한다.
 narae.js에서는 사용자가 Router를 생성할 필요 없이 @RequestMapping 어노테이션을 통해 쉽게 handler를 구현할 수 있다.
 또한 혹시 모를 오류 발생상황을 위해 handler내에서 발생하는 오류를 catch하여 처리한다.
 
+## 관점 지향 프로그래밍
+
+= **AOP (Aspect Oriented Programming)**
+
+다음과 같은 AOP를 지원합니다.
+* `@Slf` 어노테이션을 통해 손쉽게 logger를 사용할 수 있습니다.
+* `@Transactional` 어노테이션을 통해 트랜잭션 영역을 지정해 자동으로 commit/rollback을 할 수 있습니다.
+
 # 라이센스
 
 [Apache License 2.0](LICENSE) 을 따른다.
