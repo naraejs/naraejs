@@ -8,6 +8,7 @@
  * Apache License Version 2.0
  */
 
+export * from './bean-factory';
 export * from './app-beans';
 export * from './type';
 export * from './connection-manager';

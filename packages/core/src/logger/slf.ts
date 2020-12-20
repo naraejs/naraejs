@@ -15,7 +15,7 @@ import {
 
 import {
   beanFactory
-} from '../app-beans';
+} from '../bean-factory';
 
 import {
   LoggerLike, LogWriter

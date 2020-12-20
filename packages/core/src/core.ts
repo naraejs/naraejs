@@ -1,7 +1,10 @@
 import {
-  beanFactory,
-  ConnectionManager,
-  Module, Configuration
+  beanFactory
+} from './bean-factory';
+import {
+  Module,
+  Configuration,
+  ConnectionManager
 } from './app-beans';
 import {
   IInstancedClass

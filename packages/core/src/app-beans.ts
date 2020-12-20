@@ -9,16 +9,13 @@
  */
 
 import {
-  BeanFactory, BeanType, IBeanOptions, install
+  BeanType, IBeanOptions
 } from 'bean.ts';
 
-export const beanFactory = new BeanFactory();
-
-export const installer = beanFactory.installer.bind(beanFactory);
-
-export {
-  install
-};
+import {
+  beanFactory,
+  installer
+} from './bean-factory';
 
 export const CONST_Configuration = 'Configuration';
 export interface IConfigurationOptions extends IBeanOptions {
