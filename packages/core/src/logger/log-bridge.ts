@@ -18,7 +18,7 @@ export class LogBridge implements LogWriter {
     const logNamespace = log.namespace || '';
     this._bindings.forEach((item) => {
       const itemLevel = (typeof item.level === 'undefined') ? LogLevel.TRACE : item.level;
-      if ((log.level >= itemLevel) || (item.namespace === 'root' || logNamespace === item.namespace || logNamespace.startsWith(item.namespace + '.'))) {
+      if ((log.level >= itemLevel) && (item.namespace === 'root' || logNamespace === item.namespace || logNamespace.startsWith(item.namespace + '.'))) {
         item.writers.forEach((writer) => {
           writer.writeLog(log);
         });
@@ -35,4 +35,4 @@ export class LogBridge implements LogWriter {
   }
 }
 const instance = new LogBridge();
-instance.addBinding({namespace: 'root', writers: [new ConsoleLogWriter()]});
+instance.addBinding({namespace: 'root', level: LogLevel.INFO, writers: [new ConsoleLogWriter()]});
