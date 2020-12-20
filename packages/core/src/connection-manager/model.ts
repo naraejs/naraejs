@@ -8,7 +8,36 @@
  * Apache License Version 2.0
  */
 
-export interface IConnectionManagerHandler {
+export interface ITransactionData {}
+
+export interface ITransactionalConnection {
+  /**
+   * Unique Connection Id
+   */
+  getConnectionId(): any;
+
+  /**
+   * Begin Transaction
+   */
+  doBegin(): Promise<void>;
+
+  /**
+   * Commit
+   */
+  doCommit(): Promise<void>;
+
+  /**
+   * Rollback
+   */
+  doRollback(): Promise<void>;
+
+  /**
+   * Optional transaction data
+   */
+  getTransactionData?(): ITransactionData;
+}
+
+export interface IConnectionManagerHandler<TConnection = never> {
   name: string;
 
   /**
@@ -17,8 +46,20 @@ export interface IConnectionManagerHandler {
   essential: boolean;
 
   /**
+   * If true, transactions are automatically processed when Transactional Annotation is set.
+   */
+  transactional?: boolean;
+
+  /**
    * If successful, resolve the Promise and return details.
    * If failure, reject the Promise. see {@link IHealthCheckError}
    */
   healthCheck(): Promise<any>;
+
+  /**
+   * TransactionalConnection
+   *
+   * If transactional is set, must implement {@link ITransactionalConnection}
+   */
+  getConnection?(): Promise<TConnection>;
 }

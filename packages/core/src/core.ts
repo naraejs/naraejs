@@ -3,9 +3,11 @@ import {
 } from './bean-factory';
 import {
   Module,
-  Configuration,
-  ConnectionManager
+  Configuration
 } from './app-beans';
+import {
+  ConnectionManager
+} from './connection-manager';
 import {
   IInstancedClass
 } from 'bean.ts';

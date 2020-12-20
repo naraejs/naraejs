@@ -60,15 +60,6 @@ export function Component(options?: IBeanOptions) {
   });
 }
 
-export const CONST_ConnectionManager = 'ConnectionManager';
-export function ConnectionManager(options?: IBeanOptions) {
-  return beanFactory.makeRegisterAnnotation({
-    componentType: CONST_ConnectionManager,
-    beanType: BeanType.Singletone,
-    beanName: options && options.name
-  });
-}
-
 export interface IControllerOptions extends IBeanOptions {
   path?: string;
 }
